@@ -37,6 +37,13 @@ void setup_handshake() {
     if (status == -1) {
         printf("Error connecting to client pipe. %s\n", strerror(errno));
     }
+    status = read(pub_pipe, client_pid, sizeof(client_pid)); 
+    if (status == -1) {
+        printf("Unable to read from client.\n");
+    }
+    if (strcmp(client_pid, "connected") != 0) {
+        printf("Unable to finalize connection.\n");
+    }
     printf("You have been connected!\n");
 }
 
@@ -48,6 +55,7 @@ int main()
         setup_handshake();
         char * info = "./sender";
         char * processed = "./reciever";
+        
         mkfifo(info, 0664);
         mkfifo(processed, 0664);
 

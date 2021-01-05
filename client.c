@@ -48,6 +48,10 @@ void connect_server() {
         printf("Unable to connect to the server.\n");
     }
     else {
+        status = write(pub_pipe, "connected", 256);
+        if (status == -1) {
+            printf("Unable to send confirmation to server.\n");
+        }
         printf("You have been connected!\n");
         unlink(toSend);
     }
@@ -60,6 +64,9 @@ int main() {
     char * sender = "./sender";
     char * reciever = "./reciever";
     
+    mkfifo(sender, 0664);
+    mkfifo(reciever, 0664);
+
     int fd1 = open(sender, O_WRONLY);
     int fd2 = open(reciever, O_RDONLY);
 
